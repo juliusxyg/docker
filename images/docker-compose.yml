@@ -13,6 +13,7 @@ php:
       - "9000:9000"
     links:
       - "mysql"
+      - "memcached"
     volumes:
       - ~/workspace/opt:/opt
 
@@ -24,3 +25,8 @@ mysql:
       - ~/workspace/opt/data/mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: 123456
+
+memcached:
+    image: memcached
+    ports:
+      - "11211:11211"
