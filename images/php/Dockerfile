@@ -1,4 +1,4 @@
-FROM php:5-fpm
+FROM php:7-fpm
 
 ADD php.ini    /usr/local/etc/php/php.ini
 ADD php-fpm.conf    /usr/local/etc/php-fpm.conf
@@ -31,7 +31,22 @@ RUN docker-php-ext-install iconv mcrypt \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install gettext \
     && docker-php-ext-install mysqli \
-		&& pecl install memcached \
+    && pecl install yaf \
+    && docker-php-ext-enable yaf \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz" \
+    && mkdir -p memcached \
+    && tar -C memcached -zxvf /tmp/memcached.tar.gz --strip 1 \
+    && ( \
+        cd memcached \
+        && phpize \
+        && ./configure \
+        && make -j$(nproc) \
+        && make install \
+    ) \
+    && rm -r memcached \
+    && rm /tmp/memcached.tar.gz \
     && docker-php-ext-enable memcached
 
 WORKDIR /opt
