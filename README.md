@@ -19,3 +19,9 @@ login into mysql bash:
 ~: mysql -h 127.0.0.1 -P 3306 -u root -p123456
 
 use docker-machine ip : 192.168.99.100 to connect mysql container from your local mysqlclient
+
+
+build single image:
+~: docker-compose build nginx
+restart
+~: docker-compose up -d --remove-orphans
