@@ -47,7 +47,20 @@ RUN docker-php-ext-install iconv mcrypt \
     ) \
     && rm -r memcached \
     && rm /tmp/memcached.tar.gz \
-    && docker-php-ext-enable memcached
+    && docker-php-ext-enable memcached \
+    && curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/php7.tar.gz \
+    && mkdir -p redis \
+    && tar -C redis -zxvf /tmp/redis.tar.gz --strip 1 \
+    && ( \
+        cd redis \
+        && phpize \
+        && ./configure \
+        && make -j$(nproc) \
+        && make install \
+    ) \
+    && rm -r redis \
+    && rm /tmp/redis.tar.gz \
+    && docker-php-ext-enable redis
 
 WORKDIR /opt
 RUN usermod -u 1000 www-data
