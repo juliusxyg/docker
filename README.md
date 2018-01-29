@@ -1,5 +1,7 @@
 
 ~: cd ~/workspace/docker/images
+~: docker-machine start
+~: eval "$(docker-machine env default)"
 ~: docker-compose up -d --remove-orphans
 
 update /etc/hosts and visit
@@ -29,3 +31,6 @@ restart
 nginx reload in container image:
 ~: docker exec -it images_nginx_1 bash
 #: service nginx reload
+
+use composer in php image:
+~: docker-compose -f ~/workspace/docker/images/docker-compose.yml run -w /opt/htdocs/mySf -v ~/workspace/opt/htdocs/mySf --user www-data php composer install

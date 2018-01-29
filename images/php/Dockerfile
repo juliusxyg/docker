@@ -1,4 +1,4 @@
-FROM php:7.1.3-fpm
+FROM php:7.1.13-fpm
 
 ADD php.ini    /usr/local/etc/php/php.ini
 ADD php-fpm.conf    /usr/local/etc/php-fpm.conf
@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y \
 				libmcrypt-dev \
 # For memcached
 				libmemcached-dev \
+# For composer 
+                zip unzip \
 	&& \
 # Cleanup
 	apt-get clean && \
@@ -35,8 +37,9 @@ RUN docker-php-ext-install iconv mcrypt \
     && pecl install redis \
     && pecl install mongodb \
     && pecl install yaf \
-    && pecl install xdebug \
-    && docker-php-ext-enable memcached redis mongodb yaf xdebug
+    && docker-php-ext-enable memcached redis mongodb yaf
+
+RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
 WORKDIR /opt
 RUN usermod -u 1000 www-data
