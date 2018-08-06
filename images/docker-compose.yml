@@ -1,38 +1,68 @@
-nginx:
-    build: ./nginx
-    ports:
-      - "80:80"
-    links:
-      - "php"
-    volumes:
-      - ~/workspace/opt:/opt
+version: "2"
 
-php:
-    build: ./php
-    ports:
-      - "9000:9000"
-    links:
-      - "mysql"
-      - "memcached"
-      - "redis"
-    volumes:
-      - ~/workspace/opt:/opt
+services:
+  nginx:
+      build: ./nginx
+      ports:
+        - "80:80"
+        - "443:443"
+      depends_on:
+        - "php"
+      links:
+        - "php"
+      volumes:
+        - ~/workspace/opt:/www
+      networks:
+        dev_net:
+          ipv4_address: 10.0.0.10
 
-mysql:
-    build: ./mysql
-    ports:
-      - "3306:3306"
-    volumes:
-      - ~/workspace/opt/data/mysql:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: 123456
+  php:
+      build: ./php
+      ports:
+        - "9000:9000"
+      depends_on:
+        - "mysql"
+        - "memcached"
+        - "redis"
+      volumes:
+        - ~/workspace/opt:/www
+      networks:
+        dev_net:
+          ipv4_address: 10.0.0.15
 
-memcached:
-    image: memcached
-    ports:
-      - "11211:11211"
+  mysql:
+      build: ./mysql
+      ports:
+        - "3306:3306"
+      volumes:
+        - ~/workspace/opt/data/mysql:/var/lib/mysql
+      environment:
+        MYSQL_ROOT_PASSWORD: 123456
+      networks:
+        dev_net:
+          ipv4_address: 10.0.0.20
 
-redis:
-    image: redis
-    ports:
-      - "6379:6379"
+  memcached:
+      image: memcached
+      ports:
+        - "11211:11211"
+      networks:
+        dev_net:
+          ipv4_address: 10.0.0.25
+
+  redis:
+      image: redis
+      ports:
+        - "6379:6379"
+      networks:
+        dev_net:
+          ipv4_address: 10.0.0.30
+
+networks:
+  dev_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/16
+

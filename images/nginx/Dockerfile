@@ -1,9 +1,14 @@
 FROM nginx:1.9.2
 
 ADD  nginx.conf      /etc/nginx/nginx.conf
-ADD  fastcgi_params      /etc/nginx/fastcgi_params
-ADD  sites-enabled/*    /etc/nginx/conf.d/
-RUN  mkdir /opt/htdocs && mkdir /opt/log && mkdir /opt/log/nginx
-RUN  chown -R www-data.www-data /opt/htdocs /opt/log
+ADD  fastcgi_params  /etc/nginx/fastcgi_params
+ADD  vhosts/*    	 	 /etc/nginx/conf.d/vhosts/
+ADD  certs/*  	 	 /etc/nginx/certs/
+RUN  mkdir /www && \
+	 mkdir /www/log && \
+	 mkdir /www/log/nginx
+RUN  chown -R www-data.www-data /www
 
-VOLUME ["/opt"]
+EXPOSE 80
+
+VOLUME ["/www"]
