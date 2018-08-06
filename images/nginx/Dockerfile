@@ -1,8 +1,8 @@
-FROM nginx:1.9.2
+FROM nginx:1.13
 
 ADD  nginx.conf      /etc/nginx/nginx.conf
 ADD  fastcgi_params  /etc/nginx/fastcgi_params
-ADD  vhosts/*    	 	 /etc/nginx/conf.d/vhosts/
+ADD  vhosts/*    	 /etc/nginx/conf.d/vhosts/
 ADD  certs/*  	 	 /etc/nginx/certs/
 RUN  mkdir /www && \
 	 mkdir /www/log && \
