@@ -1,6 +1,16 @@
 version: "2"
 
 services:
+  openresty:
+    build: ./openresty
+    ports: 
+      - "8080:8080"
+    volumes:
+        - ~/workspace/opt:/www
+    networks:
+        dev_net:
+          ipv4_address: 10.0.0.11
+
   nginx:
       build: ./nginx
       ports:
