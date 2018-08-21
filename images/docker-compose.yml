@@ -68,6 +68,34 @@ services:
         dev_net:
           ipv4_address: 10.0.0.30
 
+  percona_master:
+      build: ./percona
+      ports:
+        - "3307:3306"
+      volumes:
+        - ~/workspace/opt/data/percona/master:/var/lib/mysql
+        - ./percona/cnf/master:/etc/mysql/conf.d
+      environment:
+        MYSQL_ROOT_PASSWORD: 123456
+      networks:
+        dev_net:
+          ipv4_address: 10.0.0.21
+
+  percona_slave:
+      build: ./percona
+      ports:
+        - "3308:3306"
+      depends_on:
+        - "percona_master"
+      volumes:
+        - ~/workspace/opt/data/percona/slave:/var/lib/mysql
+        - ./percona/cnf/slave:/etc/mysql/conf.d
+      environment:
+        MYSQL_ROOT_PASSWORD: 123456
+      networks:
+        dev_net:
+          ipv4_address: 10.0.0.22
+
 networks:
   dev_net:
     driver: bridge

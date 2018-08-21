@@ -1,0 +1,3 @@
+# Config Settings:
+[mysqld]
+server-id=2
